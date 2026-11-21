@@ -1,21 +1,50 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Bank App</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta name="theme-color" content="#070d1a"><title>Bank App</title>
 <style>
-html,body{height:100%;margin:0}
-body{background:#0b1220;color:#e8eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center}
-.c{padding:24px}
-.sp{width:46px;height:46px;border:4px solid #1f2d4a;border-top-color:#35d07f;border-radius:50%;margin:0 auto;animation:r .9s linear infinite}
-@keyframes r{to{transform:rotate(360deg)}}
-.n{font-size:22px;font-weight:700;letter-spacing:.3px;margin:18px 0 6px}
-.s{color:#8fa3c7;font-size:15px}
-.b{display:inline-block;margin-top:18px;padding:12px 22px;background:#35d07f;color:#04210f;border-radius:10px;font-weight:700;text-decoration:none}
-</style></head><body><div class="c"><div class="sp" id="sp"></div><div class="n">Bank App</div><div class="s" id="s">Opening...</div><div id="x"></div></div>
-<noscript><p style="color:#8fa3c7">Please turn on JavaScript to open the app.</p></noscript>
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:radial-gradient(120% 90% at 50% 0%,#14264d 0%,#0a1224 55%,#070d1a 100%);color:#eef3ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.card{width:100%;max-width:380px}
+.logo{width:84px;height:84px;margin:0 auto 22px;border-radius:24px;background:linear-gradient(135deg,#35d07f,#1aa5c8);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#04210f;box-shadow:0 14px 40px rgba(53,208,127,.28);position:relative}
+.logo:after{content:"";position:absolute;inset:-7px;border-radius:30px;border:2px solid rgba(53,208,127,.35);animation:p 1.8s ease-out infinite}
+@keyframes p{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.18);opacity:0}}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:.3px}
+.t{font-size:17px;font-weight:600;margin:20px 0 4px;min-height:24px}
+.s{color:#8fa3c7;font-size:14px;min-height:20px;line-height:1.4}
+.bar{height:5px;background:#16233f;border-radius:5px;margin:22px auto 4px;overflow:hidden;max-width:280px}
+.bar i{display:block;height:100%;width:30%;background:linear-gradient(90deg,#35d07f,#1aa5c8);border-radius:5px;animation:m 1.3s ease-in-out infinite}
+@keyframes m{0%{margin-left:-30%}100%{margin-left:100%}}
+.ks{display:flex;justify-content:center;gap:8px;margin-top:18px;font-size:12px;color:#5f739b}
+.k{padding:6px 10px;border-radius:20px;background:#101c36;transition:.3s}
+.k.on{color:#eef3ff;background:#1b2f57}.k.ok{color:#35d07f}
+.b{display:none;margin-top:22px;padding:13px 26px;background:#35d07f;color:#04210f;border:0;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer}
+.l{margin-top:26px;color:#4d6088;font-size:12px}
+</style></head><body><div class="card">
+<div class="logo" id="lg"></div><h1>Bank App</h1>
+<div class="t" id="t">Connecting securely</div><div class="s" id="s">One moment, opening your bank.</div>
+<div class="bar" id="br"><i></i></div>
+<div class="ks"><span class="k on" id="k1">Finding</span><span class="k" id="k2">Checking</span><span class="k" id="k3">Opening</span></div>
+<button class="b" id="b" onclick="location.reload()">Try again</button>
+<div class="l">Secure connection &#128274;</div>
+<noscript><p style="color:#8fa3c7">Please turn on JavaScript to open the app.</p></noscript></div>
 <script>
-var u="";
-function show(m){document.getElementById("sp").style.display="none";document.getElementById("s").textContent=m;}
-function btn(){var a=document.createElement("a");a.className="b";if(u){a.href=u;a.textContent="Tap to open";}else{a.href="";a.textContent="Try again";}document.getElementById("x").appendChild(a);}
-fetch("https://raw.githubusercontent.com/mannanfastbank/bank-link/main/current.txt?_="+Date.now(),{cache:"no-store"})
-.then(function(r){if(!r.ok)throw 0;return r.text();})
-.then(function(t){u=t.trim();if(/^https:\/\//.test(u)){location.replace(u);setTimeout(function(){show("Taking longer than usual");btn();},5000);}else{show("The link is not ready yet");btn();}})
-.catch(function(){show("Could not load the link");btn();});
+var REPO="mannanfastbank/bank-link",BR="main",tries=0,MAX=45,done=false;
+function $(i){return document.getElementById(i)}
+$("lg").textContent=(document.title||"B").charAt(0).toUpperCase();
+function st(n){for(var i=1;i<=3;i++){$("k"+i).className="k"+(i<n?" ok":(i==n?" on":""))}}
+function say(t,s){$("t").textContent=t;$("s").textContent=s||""}
+function giveup(){st(1);say("Still connecting","The service is renewing its secure link. This page keeps trying by itself.");$("b").style.display="inline-block"}
+function cur(){return fetch("https://raw.githubusercontent.com/"+REPO+"/"+BR+"/current.txt?_="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){return t.trim()})}
+function probe(u){return new Promise(function(ok){var i=new Image(),m=setTimeout(function(){i.onload=i.onerror=null;ok(false)},7000);i.onload=function(){clearTimeout(m);ok(true)};i.onerror=function(){clearTimeout(m);ok(false)};i.src=u+"/assets/favicon.ico?_="+Date.now()})}
+function go(){
+  if(done)return;tries++;st(1);
+  cur().then(function(u){
+    if(!/^https:\/\/[a-z0-9.-]+$/.test(u)){say("Getting ready","The new secure link is being prepared.");return false}
+    st(2);say("Checking the connection","Making sure the bank answers.");
+    return probe(u).then(function(ok){
+      if(ok){done=true;st(3);say("Opening","");location.replace(u)}
+      else{say("Renewing the link","The service just restarted. Trying again automatically.")}
+      return ok});
+  }).catch(function(){say("Reconnecting","Waiting for the network.");return false})
+  .then(function(ok){if(!ok&&!done){if(tries==MAX)giveup();setTimeout(go,tries>MAX?5000:2500)}});
+}
+go();
 </script></body></html>
