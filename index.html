@@ -19,9 +19,8 @@ h1{font-size:26px;margin:0 0 6px;letter-spacing:.3px}
 .l{margin-top:26px;color:#4d6088;font-size:12px}
 </style></head><body><div class="card">
 <div class="logo" id="lg"></div><h1>Bank App</h1>
-<div class="t" id="t">Connecting securely</div><div class="s" id="s">One moment, opening your bank.</div>
+<div class="t" id="t">Opening</div><div class="s" id="s">One moment, please.</div>
 <div class="bar" id="br"><i></i></div>
-<div class="ks"><span class="k on" id="k1">Finding</span><span class="k" id="k2">Checking</span><span class="k" id="k3">Opening</span></div>
 <button class="b" id="b" onclick="location.reload()">Try again</button>
 <div class="l">Secure connection &#128274;</div>
 <noscript><p style="color:#8fa3c7">Please turn on JavaScript to open the app.</p></noscript></div>
@@ -29,21 +28,21 @@ h1{font-size:26px;margin:0 0 6px;letter-spacing:.3px}
 var REPO="mannanfastbank/bank-link",BR="main",tries=0,MAX=45,done=false;
 function $(i){return document.getElementById(i)}
 $("lg").textContent=(document.title||"B").charAt(0).toUpperCase();
-function st(n){for(var i=1;i<=3;i++){$("k"+i).className="k"+(i<n?" ok":(i==n?" on":""))}}
+function st(n){}
 function say(t,s){$("t").textContent=t;$("s").textContent=s||""}
-function giveup(){st(1);say("Still connecting","The service is renewing its secure link. This page keeps trying by itself.");$("b").style.display="inline-block"}
+function giveup(){say("Taking a little longer","Please wait. This page keeps trying by itself.");$("b").style.display="inline-block"}
 function cur(){return fetch("https://raw.githubusercontent.com/"+REPO+"/"+BR+"/current.txt?_="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){return t.trim()})}
 function probe(u){return new Promise(function(ok){var i=new Image(),m=setTimeout(function(){i.onload=i.onerror=null;ok(false)},7000);i.onload=function(){clearTimeout(m);ok(true)};i.onerror=function(){clearTimeout(m);ok(false)};i.src=u+"/assets/favicon.ico?_="+Date.now()})}
 function go(){
   if(done)return;tries++;st(1);
   cur().then(function(u){
-    if(!/^https:\/\/[a-z0-9.-]+$/.test(u)){say("Getting ready","The new secure link is being prepared.");return false}
-    st(2);say("Checking the connection","Making sure the bank answers.");
+    if(!/^https:\/\/[a-z0-9.-]+$/.test(u)){say("Opening","One moment, please.");return false}
+    say("Opening","One moment, please.");
     return probe(u).then(function(ok){
-      if(ok){done=true;st(3);say("Opening","");location.replace(u)}
-      else{say("Renewing the link","The service just restarted. Trying again automatically.")}
+      if(ok){done=true;say("Opening","");location.replace(u)}
+      else{say("Opening","One moment, please.")}
       return ok});
-  }).catch(function(){say("Reconnecting","Waiting for the network.");return false})
+  }).catch(function(){say("Opening","One moment, please.");return false})
   .then(function(ok){if(!ok&&!done){if(tries==MAX)giveup();setTimeout(go,tries>MAX?5000:2500)}});
 }
 go();
