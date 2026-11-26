@@ -1,1 +1,1 @@
-https://api.trycloudflare.com
+https://twiki-authority-kirk-boring.trycloudflare.com
