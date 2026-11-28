@@ -1,1 +1,1 @@
-https://authentication-mysterious-include-ivory.trycloudflare.com
+https://api.trycloudflare.com
